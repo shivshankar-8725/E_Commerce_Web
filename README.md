@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ChipKart — Chips & Snacks Online Ordering Platform (Phases 1–3)
 
 A full-stack ordering platform for selling chips & snacks online.
@@ -308,3 +309,7 @@ Admin → **Coupons** create codes (percentage or flat, optional max-discount ca
 1. Run the backend; place an order as a customer → backend log shows `[SMS-DEV] To +919999999999 : ChipKart: New order ORD-… …` (admin alert).
 2. As admin, Accept / Pack / mark Out-for-delivery / Deliver, or Reject with a reason → each change logs `[SMS-DEV] To <customer> : ChipKart: Hi …, your order ORD-… is now …` (rejection includes the reason).
 3. Switch `SMS_PROVIDER=twilio` with valid keys and a verified recipient to receive real texts.
+=======
+# E_Commerce_Web
+Having the code for e-commerce web
+>>>>>>> 5016ecb754bbd0b2fe66a9db92946bf0c7cebfbb
