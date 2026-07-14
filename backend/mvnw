@@ -1,0 +1,76 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup script, version 3.3.2 (POSIX sh)
+# Downloads Maven on first run; no global Maven install required.
+# ----------------------------------------------------------------------------
+set -euf
+[ "${MVNW_VERBOSE:-}" != debug ] || set -x
+
+# resolve script directory
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+
+die() { printf '%s\n' "$1" >&2; exit 1; }
+
+[ -r "$script_dir/.mvn/wrapper/maven-wrapper.properties" ] \
+  || die "cannot read $script_dir/.mvn/wrapper/maven-wrapper.properties"
+
+# read distributionUrl from properties
+distributionUrl=$(grep '^distributionUrl=' "$script_dir/.mvn/wrapper/maven-wrapper.properties" | cut -d= -f2- | tr -d '\r')
+[ -n "$distributionUrl" ] || die "cannot read distributionUrl property"
+
+case "${distributionUrl##*/}" in
+  maven-mvnd-*)
+    MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/
+    distributionUrl="${distributionUrl%-bin.*}-linux-amd64.tar.gz"
+    ;;
+  *)
+    MVN_CMD="mvn" _MVNW_REPO_PATTERN=/org/apache/maven/
+    ;;
+esac
+
+if [ -n "${MVNW_REPOURL:-}" ]; then
+  distributionUrl="$MVNW_REPOURL$_MVNW_REPO_PATTERN${distributionUrl#*"$_MVNW_REPO_PATTERN"}"
+fi
+distributionUrlName="${distributionUrl##*/}"
+distributionUrlNameMain="${distributionUrlName%.*}"
+distributionUrlNameMain="${distributionUrlNameMain%-bin}"
+
+MAVEN_USER_HOME="${MAVEN_USER_HOME:-${HOME}/.m2}"
+MAVEN_HOME_PARENT="$MAVEN_USER_HOME/wrapper/dists/$distributionUrlNameMain"
+
+hash=$(printf '%s' "$distributionUrl" | md5sum 2>/dev/null | cut -d' ' -f1) \
+  || hash=$(printf '%s' "$distributionUrl" | md5 -q 2>/dev/null) \
+  || die "cannot compute hash for distributionUrl"
+MAVEN_HOME="$MAVEN_HOME_PARENT/$hash"
+
+if [ -d "$MAVEN_HOME" ]; then
+  exec "$MAVEN_HOME/bin/$MVN_CMD" "$@"
+fi
+
+case "$distributionUrl" in
+  *-bin.zip|*-bin.tar.gz) ;;
+  *) die "distributionUrl is not valid, must end with *-bin.zip or *-bin.tar.gz, but found $distributionUrl" ;;
+esac
+
+# prepare temp dir
+TMP_DOWNLOAD_DIR=$(mktemp -d) || die "cannot create temp dir"
+trap 'rm -rf -- "$TMP_DOWNLOAD_DIR"' EXIT
+
+mkdir -p -- "$MAVEN_HOME_PARENT"
+
+printf 'Downloading Maven from %s\n' "$distributionUrl" >&2
+if command -v curl >/dev/null 2>&1; then
+  curl -fsSL -o "$TMP_DOWNLOAD_DIR/$distributionUrlName" "$distributionUrl" || die "download failed"
+elif command -v wget >/dev/null 2>&1; then
+  wget -q -O "$TMP_DOWNLOAD_DIR/$distributionUrlName" "$distributionUrl" || die "download failed"
+else
+  die "curl or wget is required to download Maven"
+fi
+
+case "$distributionUrlName" in
+  *.zip) (cd "$TMP_DOWNLOAD_DIR" && unzip -q "$distributionUrlName") ;;
+  *.tar.gz) (cd "$TMP_DOWNLOAD_DIR" && tar xzf "$distributionUrlName") ;;
+esac
+
+mv -- "$TMP_DOWNLOAD_DIR/$distributionUrlNameMain" "$MAVEN_HOME"
+exec "$MAVEN_HOME/bin/$MVN_CMD" "$@"

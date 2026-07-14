@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "ChipKart",
+    "slug": "chipkart",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#e8590c"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.chipkart.app"
+    },
+    "android": {
+      "package": "com.chipkart.app",
+      "versionCode": 1,
+      "permissions": ["INTERNET"]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}
