@@ -1,8 +1,9 @@
 import axios from 'axios'
 
-// Single axios instance. Base is empty so requests hit /api/* (proxied to backend in dev).
+// Base URL: in production set VITE_API_URL to the backend origin (e.g. the Render
+// backend URL). In dev it stays empty so /api/* is proxied to the backend by Vite.
 const client = axios.create({
-  baseURL: '',
+  baseURL: import.meta.env.VITE_API_URL || '',
 })
 
 // Attach JWT from localStorage on every request.
