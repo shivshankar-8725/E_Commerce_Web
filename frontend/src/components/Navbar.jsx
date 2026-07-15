@@ -11,20 +11,23 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
 
+  const toggle = (
+    <button
+      className="nav-toggle"
+      onClick={() => setOpen(o => !o)}
+      aria-label="Toggle menu"
+      aria-expanded={open}
+    >
+      {open ? '✕' : '☰'}
+    </button>
+  )
+
   // Admin gets the admin navbar
   if (isAdmin) {
     return (
       <nav className="nav">
         <div className="nav-inner">
           <Link to="/admin" className="brand" onClick={close}>🛒 E-Mart <span className="brand-tag">Admin</span></Link>
-          <button
-            className="nav-toggle"
-            onClick={() => setOpen(o => !o)}
-            aria-label="Toggle menu"
-            aria-expanded={open}
-          >
-            {open ? '✕' : '☰'}
-          </button>
           <div className={`nav-links${open ? ' open' : ''}`}>
             <NavLink to="/admin" end onClick={close}>Dashboard</NavLink>
             <NavLink to="/admin/products" onClick={close}>Products</NavLink>
@@ -35,9 +38,12 @@ export default function Navbar() {
             <NavLink to="/admin/reports" onClick={close}>Reports</NavLink>
             <NavLink to="/admin/coupons" onClick={close}>Coupons</NavLink>
             <NavLink to="/admin/pincodes" onClick={close}>Delivery Area</NavLink>
+          </div>
+          <div className="nav-actions">
             <NotificationBell />
             <ProfileMenu />
           </div>
+          {toggle}
         </div>
       </nav>
     )
@@ -47,25 +53,13 @@ export default function Navbar() {
     <nav className="nav">
       <div className="nav-inner">
         <Link to="/shop" className="brand" onClick={close}>🛒 E-Mart</Link>
-        <button
-          className="nav-toggle"
-          onClick={() => setOpen(o => !o)}
-          aria-label="Toggle menu"
-          aria-expanded={open}
-        >
-          {open ? '✕' : '☰'}
-        </button>
         <div className={`nav-links${open ? ' open' : ''}`}>
           <NavLink to="/shop" onClick={close}>Shop</NavLink>
           <NavLink to="/cart" className="nav-cart" onClick={close}>
             🛒 Cart{count > 0 && <span className="cart-badge">{count}</span>}
           </NavLink>
           {isAuthenticated ? (
-            <>
-              <NavLink to="/orders" onClick={close}>My Orders</NavLink>
-              <NotificationBell />
-              <ProfileMenu />
-            </>
+            <NavLink to="/orders" onClick={close}>My Orders</NavLink>
           ) : (
             <>
               <NavLink to="/login" onClick={close}>Login</NavLink>
@@ -73,6 +67,13 @@ export default function Navbar() {
             </>
           )}
         </div>
+        {isAuthenticated && (
+          <div className="nav-actions">
+            <NotificationBell />
+            <ProfileMenu />
+          </div>
+        )}
+        {toggle}
       </div>
     </nav>
   )
