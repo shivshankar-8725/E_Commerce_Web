@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
@@ -7,23 +8,33 @@ import NotificationBell from './NotificationBell'
 export default function Navbar() {
   const { isAuthenticated, isAdmin } = useAuth()
   const { count } = useCart()
+  const [open, setOpen] = useState(false)
+  const close = () => setOpen(false)
 
   // Admin gets the admin navbar
   if (isAdmin) {
     return (
       <nav className="nav">
         <div className="nav-inner">
-          <Link to="/admin" className="brand">🛒 E-Mart <span className="brand-tag">Admin</span></Link>
-          <div className="nav-links">
-            <NavLink to="/admin" end>Dashboard</NavLink>
-            <NavLink to="/admin/products">Products</NavLink>
-            <NavLink to="/admin/categories">Categories</NavLink>
-            <NavLink to="/admin/orders">Orders</NavLink>
-            <NavLink to="/admin/customers">Customers</NavLink>
-            <NavLink to="/admin/dealers">Dealers</NavLink>
-            <NavLink to="/admin/reports">Reports</NavLink>
-            <NavLink to="/admin/coupons">Coupons</NavLink>
-            <NavLink to="/admin/pincodes">Delivery Area</NavLink>
+          <Link to="/admin" className="brand" onClick={close}>🛒 E-Mart <span className="brand-tag">Admin</span></Link>
+          <button
+            className="nav-toggle"
+            onClick={() => setOpen(o => !o)}
+            aria-label="Toggle menu"
+            aria-expanded={open}
+          >
+            {open ? '✕' : '☰'}
+          </button>
+          <div className={`nav-links${open ? ' open' : ''}`}>
+            <NavLink to="/admin" end onClick={close}>Dashboard</NavLink>
+            <NavLink to="/admin/products" onClick={close}>Products</NavLink>
+            <NavLink to="/admin/categories" onClick={close}>Categories</NavLink>
+            <NavLink to="/admin/orders" onClick={close}>Orders</NavLink>
+            <NavLink to="/admin/customers" onClick={close}>Customers</NavLink>
+            <NavLink to="/admin/dealers" onClick={close}>Dealers</NavLink>
+            <NavLink to="/admin/reports" onClick={close}>Reports</NavLink>
+            <NavLink to="/admin/coupons" onClick={close}>Coupons</NavLink>
+            <NavLink to="/admin/pincodes" onClick={close}>Delivery Area</NavLink>
             <NotificationBell />
             <ProfileMenu />
           </div>
@@ -35,22 +46,30 @@ export default function Navbar() {
   return (
     <nav className="nav">
       <div className="nav-inner">
-        <Link to="/shop" className="brand">🛒 E-Mart</Link>
-        <div className="nav-links">
-          <NavLink to="/shop">Shop</NavLink>
-          <NavLink to="/cart" className="nav-cart">
+        <Link to="/shop" className="brand" onClick={close}>🛒 E-Mart</Link>
+        <button
+          className="nav-toggle"
+          onClick={() => setOpen(o => !o)}
+          aria-label="Toggle menu"
+          aria-expanded={open}
+        >
+          {open ? '✕' : '☰'}
+        </button>
+        <div className={`nav-links${open ? ' open' : ''}`}>
+          <NavLink to="/shop" onClick={close}>Shop</NavLink>
+          <NavLink to="/cart" className="nav-cart" onClick={close}>
             🛒 Cart{count > 0 && <span className="cart-badge">{count}</span>}
           </NavLink>
           {isAuthenticated ? (
             <>
-              <NavLink to="/orders">My Orders</NavLink>
+              <NavLink to="/orders" onClick={close}>My Orders</NavLink>
               <NotificationBell />
               <ProfileMenu />
             </>
           ) : (
             <>
-              <NavLink to="/login">Login</NavLink>
-              <NavLink to="/register" className="nav-primary">Register</NavLink>
+              <NavLink to="/login" onClick={close}>Login</NavLink>
+              <NavLink to="/register" className="nav-primary" onClick={close}>Register</NavLink>
             </>
           )}
         </div>
