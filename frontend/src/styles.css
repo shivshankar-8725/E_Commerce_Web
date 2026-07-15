@@ -363,8 +363,45 @@ h2 { font-size: 1.2rem; }
 
 @media (max-width: 900px) { .dash-cols { grid-template-columns: 1fr; } }
 
+/* ===== Responsive: tablets ===== */
+@media (max-width: 768px) {
+  .container { padding: 16px; }
+  .nav-inner { padding: 10px 16px; flex-wrap: wrap; }
+}
+
+/* ===== Responsive: phones ===== */
 @media (max-width: 640px) {
-  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-  .nav-inner { gap: 8px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
   h1 { font-size: 1.25rem; }
+  h2 { font-size: 1.1rem; }
+
+  /* Navbar: brand on its own row, links wrap full-width below it */
+  .nav-inner { gap: 10px; }
+  .brand { font-size: 1.2rem; }
+  .nav-links { width: 100%; margin-left: 0; gap: 6px; }
+  .nav-links a { padding: 7px 12px; font-size: 0.85rem; }
+
+  /* Shop hero: stacked and compact */
+  .shop-hero { flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 18px; }
+  .shop-hero-title { font-size: 1.4rem; }
+  .shop-hero-emoji { display: none; }
+
+  /* Toolbar: search takes full width */
+  .shop-toolbar { padding: 12px; gap: 10px; }
+  .shop-search { min-width: 100%; }
+
+  /* Dropdown menus never wider than the screen */
+  .notif-menu, .profile-menu { max-width: calc(100vw - 24px); }
+
+  /* Admin dashboard hero compact */
+  .dash-hero { padding: 18px; }
+  .dash-hello { font-size: 1.3rem; }
+  .qa-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ===== Responsive: small phones ===== */
+@media (max-width: 400px) {
+  .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .container { padding: 12px; }
+  .nav-links a { padding: 6px 10px; font-size: 0.8rem; }
 }
