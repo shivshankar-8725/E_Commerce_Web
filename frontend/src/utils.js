@@ -56,10 +56,17 @@ export function loadRazorpay() {
 
 // P3-PAY-03: a single, clear payment indicator. Online-paid orders are visually distinct (green).
 export function paymentInfo(order) {
-  const online = order.paymentMode === 'ONLINE'
   const paid = order.paymentStatus === 'PAID'
-  if (online && paid) return { label: 'Paid online', bg: '#ebfbee', color: '#2b8a3e' }
-  if (online) return { label: 'Online · pending', bg: '#fff3bf', color: '#e67700' }
+  if (order.paymentMode === 'ONLINE') {
+    return paid
+      ? { label: 'Paid online', bg: '#ebfbee', color: '#2b8a3e' }
+      : { label: 'Online · pending', bg: '#fff3bf', color: '#e67700' }
+  }
+  if (order.paymentMode === 'UPI_QR') {
+    return paid
+      ? { label: 'UPI · paid', bg: '#ebfbee', color: '#2b8a3e' }
+      : { label: 'UPI · pending', bg: '#fff3bf', color: '#e67700' }
+  }
   if (paid) return { label: 'COD · paid', bg: '#ebfbee', color: '#2b8a3e' }
   return { label: 'COD', bg: '#f1f3f5', color: '#495057' }
 }

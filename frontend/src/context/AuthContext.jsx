@@ -14,6 +14,9 @@ export function AuthProvider({ children }) {
   const [onlinePaymentEnabled, setOnlinePaymentEnabled] = useState(false)
   const [deliveryCharge, setDeliveryCharge] = useState(50)
   const [freeDeliveryAbove, setFreeDeliveryAbove] = useState(1000)
+  const [upiEnabled, setUpiEnabled] = useState(false)
+  const [upiId, setUpiId] = useState('')
+  const [upiPayeeName, setUpiPayeeName] = useState('SoluSphere')
   useEffect(() => {
     client.get('/api/config')
       .then((r) => {
@@ -21,6 +24,9 @@ export function AuthProvider({ children }) {
         setOnlinePaymentEnabled(!!r.data.onlinePaymentEnabled)
         setDeliveryCharge(Number(r.data.deliveryCharge ?? 50))
         setFreeDeliveryAbove(Number(r.data.freeDeliveryAbove ?? 1000))
+        setUpiEnabled(!!r.data.upiEnabled)
+        setUpiId(r.data.upiId ?? '')
+        setUpiPayeeName(r.data.upiPayeeName || 'SoluSphere')
       })
       .catch(() => {})
   }, [])
@@ -69,6 +75,9 @@ export function AuthProvider({ children }) {
     onlinePaymentEnabled,
     deliveryCharge,
     freeDeliveryAbove,
+    upiEnabled,
+    upiId,
+    upiPayeeName,
     login,
     register,
     registerDealer,

@@ -1,15 +1,29 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
 import client, { apiError } from '../../api/client'
 import { useCart } from '../../context/CartContext'
 import { useAuth } from '../../context/AuthContext'
 import { inr, loadRazorpay } from '../../utils'
 
+// Build a UPI intent URL that UPI apps (GPay/PhonePe/Paytm) understand when scanned.
+function buildUpiUrl({ upiId, payeeName, amount, note }) {
+  const params = new URLSearchParams({
+    pa: upiId,
+    pn: payeeName || 'SoluSphere',
+    am: Number(amount || 0).toFixed(2),
+    cu: 'INR',
+  })
+  if (note) params.set('tn', note)
+  return `upi://pay?${params.toString()}`
+}
+
 const EMPTY = { line1: '', city: '', pincode: '', phone: '' }
 
 export default function Checkout() {
   const { items, total, clearCart } = useCart()
-  const { onlinePaymentEnabled, deliveryCharge, freeDeliveryAbove } = useAuth()
+  const { onlinePaymentEnabled, deliveryCharge, freeDeliveryAbove,
+          upiEnabled, upiId, upiPayeeName } = useAuth()
   const navigate = useNavigate()
 
   const [addresses, setAddresses] = useState([])
@@ -112,6 +126,24 @@ export default function Checkout() {
     }
   }
 
+  // UPI-QR order: customer has scanned the QR and paid, then places the order.
+  // Placed as PENDING — the admin confirms payment manually.
+  async function placeUpiOrder() {
+    setError(''); setInfo(''); setPlacing(true)
+    try {
+      const { data } = await client.post('/api/orders', {
+        addressId: selectedId, paymentMode: 'UPI_QR', items: buildItems(),
+        couponCode: coupon?.code || null,
+      })
+      clearCart()
+      navigate(`/orders/${data.id}`, { state: { justPlaced: true } })
+    } catch (e) {
+      setError(apiError(e, 'Could not place order.'))
+    } finally {
+      setPlacing(false)
+    }
+  }
+
   // P3-PAY-02: ONLINE order — pay first, order is placed only after verification.
   async function payOnline() {
     setError(''); setInfo(''); setPlacing(true)
@@ -175,6 +207,7 @@ export default function Checkout() {
   function handlePlace() {
     if (!selectedId) { setError('Please select or add a delivery address.'); return }
     if (paymentMode === 'ONLINE') payOnline()
+    else if (paymentMode === 'UPI_QR') placeUpiOrder()
     else placeCodOrder()
   }
 
@@ -252,6 +285,38 @@ export default function Checkout() {
                  checked={paymentMode === 'COD'} onChange={() => setPaymentMode('COD')} />
           <span><strong>Cash on Delivery</strong> — pay when your order arrives</span>
         </label>
+        <label className="row" style={{ cursor: upiEnabled ? 'pointer' : 'not-allowed', padding: '6px 0', opacity: upiEnabled ? 1 : 0.5 }}>
+          <input type="radio" name="pay" style={{ width: 'auto' }} disabled={!upiEnabled}
+                 checked={paymentMode === 'UPI_QR'} onChange={() => setPaymentMode('UPI_QR')} />
+          <span>
+            <strong>Pay via UPI QR</strong> — scan &amp; pay with any UPI app
+            {!upiEnabled && <span className="muted"> · currently unavailable</span>}
+          </span>
+        </label>
+
+        {paymentMode === 'UPI_QR' && upiEnabled && (
+          <div className="upi-qr-box">
+            <QRCodeSVG
+              value={buildUpiUrl({ upiId, payeeName: upiPayeeName, amount: payable, note: 'SoluSphere order' })}
+              size={190}
+              level="M"
+              includeMargin
+              bgColor="#ffffff"
+              fgColor="#0a0f1c"
+            />
+            <div className="upi-qr-info">
+              <div className="upi-qr-amount">{inr(payable)}</div>
+              <div className="muted" style={{ fontSize: '0.82rem' }}>Paying to <strong>{upiPayeeName}</strong></div>
+              <div className="muted" style={{ fontSize: '0.78rem', wordBreak: 'break-all' }}>{upiId}</div>
+              <ol className="upi-qr-steps">
+                <li>Open GPay / PhonePe / Paytm and scan this QR.</li>
+                <li>Pay <strong>{inr(payable)}</strong>.</li>
+                <li>Then tap <strong>Place Order</strong> below.</li>
+              </ol>
+            </div>
+          </div>
+        )}
+
         <label className="row" style={{ cursor: onlinePaymentEnabled ? 'pointer' : 'not-allowed', padding: '6px 0', opacity: onlinePaymentEnabled ? 1 : 0.5 }}>
           <input type="radio" name="pay" style={{ width: 'auto' }} disabled={!onlinePaymentEnabled}
                  checked={paymentMode === 'ONLINE'} onChange={() => setPaymentMode('ONLINE')} />
@@ -311,12 +376,18 @@ export default function Checkout() {
         )}
         <div className="between mt"><strong>Total payable</strong><strong>{inr(payable)}</strong></div>
         <div className="alert info mt">
-          Payment: {paymentMode === 'ONLINE' ? 'Pay Online (Razorpay test mode)' : 'Cash on Delivery (COD)'}
+          Payment: {paymentMode === 'ONLINE'
+            ? 'Pay Online (Razorpay test mode)'
+            : paymentMode === 'UPI_QR'
+              ? 'UPI QR — scan & pay, then place order'
+              : 'Cash on Delivery (COD)'}
         </div>
         <button style={{ width: '100%', marginTop: 8 }} disabled={placing || !selectedAddr} onClick={handlePlace}>
           {placing
             ? 'Processing...'
-            : paymentMode === 'ONLINE' ? `Pay ${inr(payable)} & Place Order` : `Place Order · ${inr(payable)}`}
+            : paymentMode === 'ONLINE' ? `Pay ${inr(payable)} & Place Order`
+            : paymentMode === 'UPI_QR' ? `I've Paid · Place Order`
+            : `Place Order · ${inr(payable)}`}
         </button>
       </div>
         </div>
