@@ -1,0 +1,26 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# Frontend static site. The `routes` rewrite is the actual fix for the
+# "white page on refresh" bug: Render does NOT read Netlify-style _redirects
+# files, so deep routes (/shop, /admin/products, …) and page refreshes were
+# returning a blank 200. This rule sends every path to index.html and lets
+# React Router handle routing on the client.
+#
+# NOTE: the `name` below must match your EXISTING Render static site, otherwise
+# applying this blueprint creates a brand-new service instead of updating it.
+services:
+  - type: web
+    name: emart-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Backend origin (e.g. your Render API URL). Set the value in the Render
+      # dashboard — sync:false keeps it out of version control.
+      - key: VITE_API_URL
+        sync: false

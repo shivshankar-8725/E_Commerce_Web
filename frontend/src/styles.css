@@ -1239,10 +1239,13 @@ tr:hover td { background: rgba(255,255,255,0.02); }
    ============================================================ */
 @media (max-width: 768px) {
   .container { padding: 18px 20px; }
-  .nav-inner { padding: 12px 20px; }
+  /* Allow the full-width drawer to wrap onto its own line instead of
+     forcing everything onto one row (which pushed the brand off-screen). */
+  .nav-inner { padding: 12px 20px; flex-wrap: wrap; row-gap: 0; gap: 10px; }
 
-  .nav-toggle { display: inline-flex; align-items: center; justify-content: center; order: 3; }
-  .nav-actions { order: 2; margin-left: auto; }
+  .brand { flex: 1 1 auto; min-width: 0; }
+  .nav-toggle { display: inline-flex; align-items: center; justify-content: center; order: 3; flex-shrink: 0; }
+  .nav-actions { order: 2; margin-left: auto; flex-shrink: 0; }
 
   .nav-links {
     display: none;
@@ -1260,7 +1263,16 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   .nav-links a { width: 100%; justify-content: center; padding: 12px; font-size: 0.94rem; }
 
   .dash-cols { grid-template-columns: 1fr; }
-  .notif-menu, .profile-menu { width: min(330px, calc(100vw - 24px)); right: 0; left: auto; }
+  /* Pin the dropdowns to the viewport so they never overflow off-screen,
+     regardless of where their trigger button sits in the top bar. */
+  .notif-menu, .profile-menu {
+    position: fixed;
+    top: 66px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: none;
+  }
 
   .shop-hero { padding: 24px; }
 }
