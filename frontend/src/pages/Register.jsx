@@ -49,20 +49,22 @@ export default function Register() {
   }
 
   return (
-    <div className="container narrow">
-      <div className="card" style={{ padding: 24, marginTop: 24 }}>
-        <h1 className="mb">Create your account</h1>
-        <p className="muted" style={{ marginTop: -8 }}>Register as a customer to start ordering.</p>
+    <div className="container narrow" style={{ paddingTop: 60 }}>
+      <div className="auth-card">
+        <div className="auth-logo">✨</div>
+        <h1 className="auth-title">Create account</h1>
+        <p className="auth-sub">Join SoluSphere as a customer</p>
+
         {error && <div className="alert error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <label>Full name</label>
           <input value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Your name" />
-          {errors.name && <small style={{ color: 'var(--red)' }}>{errors.name}</small>}
+          {errors.name && <small style={{ color: 'var(--red)', fontSize: '0.82rem' }}>{errors.name}</small>}
 
           <label>Mobile number</label>
           <input value={form.mobile} onChange={(e) => update('mobile', e.target.value)}
                  placeholder="10-digit mobile" inputMode="numeric" maxLength={10} />
-          {errors.mobile && <small style={{ color: 'var(--red)' }}>{errors.mobile}</small>}
+          {errors.mobile && <small style={{ color: 'var(--red)', fontSize: '0.82rem' }}>{errors.mobile}</small>}
 
           <label>Email (optional)</label>
           <input value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="you@example.com" />
@@ -70,18 +72,19 @@ export default function Register() {
           <label>Password</label>
           <input type="password" value={form.password} onChange={(e) => update('password', e.target.value)}
                  placeholder="At least 6 characters" />
-          {errors.password && <small style={{ color: 'var(--red)' }}>{errors.password}</small>}
+          {errors.password && <small style={{ color: 'var(--red)', fontSize: '0.82rem' }}>{errors.password}</small>}
 
-          <button type="submit" disabled={loading} style={{ width: '100%', marginTop: 16 }}>
-            {loading ? 'Creating...' : 'Register'}
+          <button type="submit" disabled={loading} style={{ width: '100%', marginTop: 20, padding: '13px 20px', fontSize: '1rem' }}>
+            {loading ? 'Creating account...' : '✦ Create Account'}
           </button>
         </form>
-        <p className="muted mt center">
-          Already have an account? <Link to="/login" style={{ color: 'var(--brand)' }}>Login</Link>
-        </p>
-        <p className="muted center" style={{ marginTop: -4 }}>
-          Are you a shopkeeper? <Link to="/register-dealer" style={{ color: 'var(--brand)' }}>Register as a Dealer</Link>
-        </p>
+
+        <div className="auth-footer">
+          Already have an account?{' '}
+          <Link to="/login">Sign in</Link>
+          {' '}·{' '}
+          <Link to="/register-dealer">Dealer signup</Link>
+        </div>
       </div>
     </div>
   )

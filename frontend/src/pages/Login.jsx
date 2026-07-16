@@ -34,25 +34,49 @@ export default function Login() {
   }
 
   return (
-    <div className="container narrow">
-      <div className="card" style={{ padding: 24, marginTop: 24 }}>
-        <h1 className="mb">Login</h1>
+    <div className="container narrow" style={{ paddingTop: 60 }}>
+      <div className="auth-card">
+        <div className="auth-logo">🛍️</div>
+        <h1 className="auth-title">Welcome back</h1>
+        <p className="auth-sub">Sign in to your SoluSphere account</p>
+
         {error && <div className="alert error">{error}</div>}
+
         <form onSubmit={handleSubmit}>
-          <label>Mobile number</label>
-          <input value={mobile} onChange={(e) => setMobile(e.target.value)}
-                 placeholder="10-digit mobile" inputMode="numeric" />
-          <label>Password</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-                 placeholder="Your password" />
-          <button type="submit" disabled={loading} style={{ width: '100%', marginTop: 16 }}>
-            {loading ? 'Logging in...' : 'Login'}
+          <label htmlFor="login-mobile">Mobile number</label>
+          <input
+            id="login-mobile"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            placeholder="10-digit mobile"
+            inputMode="numeric"
+            autoComplete="tel"
+          />
+          <label htmlFor="login-password">Password</label>
+          <input
+            id="login-password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Your password"
+            autoComplete="current-password"
+          />
+          <button
+            id="login-submit"
+            type="submit"
+            disabled={loading}
+            style={{ width: '100%', marginTop: 20, padding: '13px 20px', fontSize: '1rem' }}
+          >
+            {loading ? 'Signing in...' : '✦ Sign In'}
           </button>
         </form>
-        <p className="muted mt center">
-          New here? <Link to="/register" style={{ color: 'var(--brand)' }}>Create an account</Link>
-          {' '}· <Link to="/register-dealer" style={{ color: 'var(--brand)' }}>Dealer signup</Link>
-        </p>
+
+        <div className="auth-footer">
+          New here?{' '}
+          <Link to="/register">Create an account</Link>
+          {' '}·{' '}
+          <Link to="/register-dealer">Dealer signup</Link>
+        </div>
       </div>
     </div>
   )

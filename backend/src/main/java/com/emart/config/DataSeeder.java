@@ -97,20 +97,51 @@ public class DataSeeder implements CommandLineRunner {
     private void seedCatalogue() {
         if (categoryRepository.count() > 0 || productRepository.count() > 0) return;
 
-        Category chips = newCategory("Chips");
-        Category namkeen = newCategory("Namkeen");
-        Category snacks = newCategory("Snacks");
+        Category it = newCategory("IT Solutions");
+        Category grocery = newCategory("Grocery");
+        Category agriculture = newCategory("Agriculture");
+        Category medical = newCategory("Medical");
+        Category realEstate = newCategory("Real Estate");
 
-        newProduct("Classic Salted Potato Chips", "Crispy salted potato chips.", chips,
-                new BigDecimal("20.00"), new BigDecimal("15.00"), "50g", 100);
-        newProduct("Masala Potato Chips", "Spicy Indian masala flavour.", chips,
-                new BigDecimal("20.00"), new BigDecimal("15.00"), "50g", 80);
-        newProduct("Aloo Bhujia", "Classic spicy potato bhujia.", namkeen,
-                new BigDecimal("45.00"), new BigDecimal("36.00"), "200g", 60);
-        newProduct("Moong Dal", "Roasted and salted moong dal.", namkeen,
-                new BigDecimal("50.00"), new BigDecimal("40.00"), "200g", 0); // out of stock demo
-        newProduct("Cheese Balls", "Crunchy cheese flavoured corn puffs.", snacks,
-                new BigDecimal("30.00"), new BigDecimal("24.00"), "60g", 40);
+        // IT Solutions
+        newProduct("Custom Web Application Development", "Professional full-stack web application development tailored to your business needs, using React and Spring Boot.", it,
+                new BigDecimal("45000.00"), new BigDecimal("40000.00"), "1 Project", 99);
+        newProduct("Cloud Infrastructure Setup", "Secure and scalable cloud setup on AWS/Azure, including CI/CD pipelines, containerization with Docker, and monitoring.", it,
+                new BigDecimal("25000.00"), new BigDecimal("20000.00"), "1 Setup", 99);
+        newProduct("Enterprise IT Consultancy", "Consulting services for digital transformation, system architecture design, and IT infrastructure security audit.", it,
+                new BigDecimal("15000.00"), new BigDecimal("12000.00"), "1 Session", 99);
+
+        // Grocery
+        newProduct("Premium Basmati Rice", "Long-grain aromatic basmati rice, aged to perfection, ideal for biryani and daily luxury dining.", grocery,
+                new BigDecimal("120.00"), new BigDecimal("95.00"), "5 kg", 150);
+        newProduct("Organic Cold Pressed Mustard Oil", "100% pure and organic cold-pressed mustard oil, high in antioxidants and rich in natural aroma.", grocery,
+                new BigDecimal("210.00"), new BigDecimal("180.00"), "1 L", 120);
+        newProduct("Pure Himalayan Pink Salt", "Mineral-rich pink salt sourced directly from the Himalayas, perfect for healthy cooking and seasoning.", grocery,
+                new BigDecimal("90.00"), new BigDecimal("75.00"), "1 kg", 200);
+
+        // Agriculture
+        newProduct("Organic NPK Fertilizer", "Eco-friendly bio-fertilizer rich in Nitrogen, Phosphorus, and Potassium to boost crop yield and soil health.", agriculture,
+                new BigDecimal("350.00"), new BigDecimal("280.00"), "10 kg", 80);
+        newProduct("Hybrid Tomato Seeds", "High-yield, disease-resistant hybrid tomato seeds suitable for both polyhouse and open-field farming.", agriculture,
+                new BigDecimal("150.00"), new BigDecimal("120.00"), "50g Pack", 300);
+        newProduct("Automatic Drip Irrigation Kit", "Complete smart drip irrigation system kit with emitters, pipes, and connectors for precise water supply to plants.", agriculture,
+                new BigDecimal("1800.00"), new BigDecimal("1450.00"), "1 Unit", 0); // Out of stock demo
+
+        // Medical
+        newProduct("Digital Blood Pressure Monitor", "Fully automatic upper arm blood pressure monitor with large LCD display and irregular heartbeat detection.", medical,
+                new BigDecimal("1999.00"), new BigDecimal("1600.00"), "1 Unit", 100);
+        newProduct("N95 Protective Face Masks", "High-filtration N95 face masks with comfortable earloops, offering 95% efficiency against airborne particles.", medical,
+                new BigDecimal("250.00"), new BigDecimal("180.00"), "Pack of 10", 500);
+        newProduct("Premium First Aid Kit", "Comprehensive medical first aid kit containing bandages, antiseptics, scissors, and emergency essentials.", medical,
+                new BigDecimal("450.00"), new BigDecimal("360.00"), "1 Kit", 150);
+
+        // Real Estate
+        newProduct("Commercial Shop Lease Consulting", "Assistance in finding, verifying legal docs, and negotiating leasing terms for premium commercial shops.", realEstate,
+                new BigDecimal("10000.00"), new BigDecimal("8000.00"), "1 Shop", 99);
+        newProduct("Premium Residential Apartment Booking", "Token amount for booking premium 3 BHK residential apartments located in prime urban spaces with luxury amenities.", realEstate,
+                new BigDecimal("50000.00"), new BigDecimal("45000.00"), "Booking Fee", 20);
+        newProduct("Farmland Plot Valuation Report", "Detailed survey, mapping, soil checking, and market valuation report for agricultural and farmland properties.", realEstate,
+                new BigDecimal("5000.00"), new BigDecimal("4000.00"), "1 Survey", 40);
     }
 
     private Category newCategory(String name) {

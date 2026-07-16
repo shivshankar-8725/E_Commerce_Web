@@ -27,7 +27,7 @@ export default function Navbar() {
     return (
       <nav className="nav">
         <div className="nav-inner">
-          <Link to="/admin" className="brand" onClick={close}>🛒 E-Mart <span className="brand-tag">Admin</span></Link>
+          <Link to="/admin" className="brand" onClick={close}>🛍️ SoluSphere <span className="brand-tag">Admin</span></Link>
           <div className={`nav-links${open ? ' open' : ''}`}>
             <NavLink to="/admin" end onClick={close}>Dashboard</NavLink>
             <NavLink to="/admin/products" onClick={close}>Products</NavLink>
@@ -52,7 +52,7 @@ export default function Navbar() {
   return (
     <nav className="nav">
       <div className="nav-inner">
-        <Link to="/shop" className="brand" onClick={close}>🛒 E-Mart</Link>
+        <Link to="/shop" className="brand" onClick={close}>🛍️ SoluSphere</Link>
         <div className={`nav-links${open ? ' open' : ''}`}>
           <NavLink to="/shop" onClick={close}>Shop</NavLink>
           <NavLink to="/cart" className="nav-cart" onClick={close}>
