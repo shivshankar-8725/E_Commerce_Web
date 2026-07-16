@@ -44,14 +44,12 @@ export default function ProductDetail() {
   return (
     <div className="container">
       <Link to="/shop" className="muted">← Back to shop</Link>
-      <div className="card mt" style={{ padding: 20, display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 300px) 1fr', gap: 20, alignItems: 'start' }}
-             className="detail-grid">
-          <div className="img" style={{ height: 260, background: '#f1f3f5', borderRadius: 10,
-               display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+      <div className="card mt product-detail">
+        <div className="detail-grid">
+          <div className="detail-img">
             {product.imageUrl
-              ? <img src={imgSrc(product.imageUrl)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <span style={{ fontSize: '4rem' }}>🥨</span>}
+              ? <img src={imgSrc(product.imageUrl)} alt={product.name} />
+              : <span className="detail-img-ph">🥨</span>}
           </div>
           <div>
             <h1 style={{ marginTop: 0 }}>{product.name}</h1>
