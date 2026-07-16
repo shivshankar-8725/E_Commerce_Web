@@ -444,18 +444,19 @@ label {
   font-weight: 600;
   font-size: 0.9rem;
   color: var(--muted);
-  border: 1px solid transparent;
+  border: 1px solid var(--border-soft);
   transition: var(--transition);
 }
 .nav-links a:hover {
   color: var(--text-bright);
   background: rgba(255,255,255,0.06);
-  border-color: var(--border);
+  border-color: var(--brand-light);
 }
 .nav-links a.active {
   color: var(--brand-light);
-  background: rgba(247,103,7,0.1);
-  border-color: rgba(247,103,7,0.25);
+  background: rgba(247,103,7,0.14);
+  border-color: rgba(247,103,7,0.55);
+  box-shadow: 0 0 0 1px rgba(247,103,7,0.25), 0 4px 14px rgba(247,103,7,0.18);
 }
 
 .nav-cart {
@@ -813,6 +814,7 @@ label {
 }
 .product-card:hover .img img { transform: scale(1.1); }
 .product-card.is-out .img { filter: grayscale(0.8); opacity: 0.65; }
+.product-card .img .placeholder { font-size: 2.8rem; opacity: 0.6; }
 
 .img-ribbon {
   position: absolute;
@@ -878,6 +880,28 @@ label {
 /* ============================================================
    CART & CHECKOUT
    ============================================================ */
+/* UPI QR payment block */
+.upi-qr-box {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.upi-qr-box > svg {
+  background: #fff;
+  padding: 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.upi-qr-info { min-width: 200px; flex: 1; }
+.upi-qr-amount { font-size: 1.4rem; font-weight: 800; color: var(--brand-light); }
+.upi-qr-steps { margin: 10px 0 0; padding-left: 18px; color: var(--text); font-size: 0.85rem; line-height: 1.7; }
+
 .cart-checkout { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 36px; }
 .cart-summary {
   padding: 24px;
@@ -1244,8 +1268,22 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   .nav-inner { padding: 12px 20px; flex-wrap: wrap; row-gap: 0; gap: 10px; }
 
   .brand { flex: 1 1 auto; min-width: 0; }
-  .nav-toggle { display: inline-flex; align-items: center; justify-content: center; order: 3; flex-shrink: 0; }
   .nav-actions { order: 2; margin-left: auto; flex-shrink: 0; }
+
+  /* Keep the hamburger, bell and profile buttons the same height and
+     vertically centred so they line up in the mobile top bar. */
+  .nav-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    order: 3; flex-shrink: 0;
+  }
+  .nav-toggle, .nav-actions .notif-btn, .nav-actions .profile-btn {
+    height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 1.05rem;
+  }
+  .nav-toggle { padding-left: 12px; padding-right: 12px; }
+  .nav-actions .profile-btn { font-size: 0.85rem; }
 
   .nav-links {
     display: none;
@@ -1275,16 +1313,25 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   }
 
   .shop-hero { padding: 24px; }
+  .shop-hero-emoji { font-size: 2.4rem; }
 }
 
 /* ============================================================
    RESPONSIVE — Phone
    ============================================================ */
 @media (max-width: 640px) {
-  .grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 14px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+  /* Standardise product cards on phones: smaller image + tighter text. */
+  .product-card .img { height: 130px; }
+  .product-card .body { padding: 12px; gap: 5px; }
+  .product-card .name { font-size: 0.9rem; }
+  .product-card .price { font-size: 1.08rem; }
+  .product-card .img .placeholder { font-size: 2.2rem; }
   .brand { font-size: 1.3rem; }
-  .shop-hero { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .shop-hero-title { font-size: 1.65rem; }
+  /* Compact hero banner on phones so it doesn't dominate the screen. */
+  .shop-hero { flex-direction: column; align-items: flex-start; gap: 6px; padding: 18px 20px; margin-bottom: 18px; }
+  .shop-hero-title { font-size: 1.35rem; }
+  .shop-hero-sub { font-size: 0.86rem; margin-top: 4px; }
   .shop-hero-emoji { display: none; }
   .shop-toolbar { padding: 14px; gap: 12px; }
   .shop-search { min-width: 100%; }

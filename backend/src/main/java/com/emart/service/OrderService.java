@@ -52,7 +52,11 @@ public class OrderService {
         this.deliveryService = deliveryService;
     }
 
-    /** P1-CUST-06: place a COD order. ONLINE orders go through the payment flow instead. */
+    /**
+     * P1-CUST-06: place a COD or UPI-QR order directly. ONLINE (Razorpay) orders go through
+     * the payment flow instead. UPI-QR orders are placed as PENDING — the customer pays by
+     * scanning the QR and the admin confirms payment manually.
+     */
     @Transactional
     public OrderResponse placeOrder(Long userId, PlaceOrderRequest req) {
         if (req.paymentMode() == PaymentMode.ONLINE) {
@@ -60,7 +64,7 @@ public class OrderService {
             throw ApiException.badRequest("Online orders must be placed through the payment flow.");
         }
         PricedOrder priced = validateAndPrice(userId, req);
-        Order order = persistOrder(priced, PaymentMode.COD, PaymentStatus.PENDING, null, null);
+        Order order = persistOrder(priced, req.paymentMode(), PaymentStatus.PENDING, null, null);
         return OrderResponse.from(order);
     }
 

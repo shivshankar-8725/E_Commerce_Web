@@ -20,6 +20,12 @@ public class ConfigController {
     @Value("${app.dealer.min-order-qty:10}")
     private int dealerMinOrderQty;
 
+    @Value("${app.upi.id:}")
+    private String upiId;
+
+    @Value("${app.upi.payee-name:SoluSphere}")
+    private String upiPayeeName;
+
     private final PaymentService paymentService;
     private final com.emart.service.DeliveryService deliveryService;
 
@@ -34,7 +40,11 @@ public class ConfigController {
                 "dealerMinOrderQty", dealerMinOrderQty,
                 "onlinePaymentEnabled", paymentService.isOnlineEnabled(),
                 "deliveryCharge", deliveryService.getCharge(),
-                "freeDeliveryAbove", deliveryService.getFreeAbove()
+                "freeDeliveryAbove", deliveryService.getFreeAbove(),
+                // UPI QR payment: enabled only when a UPI ID is configured.
+                "upiEnabled", upiId != null && !upiId.isBlank(),
+                "upiId", upiId == null ? "" : upiId,
+                "upiPayeeName", upiPayeeName == null ? "" : upiPayeeName
         ));
     }
 }
