@@ -247,6 +247,32 @@ public class OrderService {
         return OrderResponse.from(saved);
     }
 
+    /**
+     * Admin confirms that a payment has been received (used for UPI-QR orders,
+     * which are placed as PENDING until the admin verifies the transfer).
+     */
+    @Transactional
+    public OrderResponse markPaymentReceived(Long orderId) {
+        Order order = findOrThrow(orderId);
+        if (order.getPaymentStatus() == PaymentStatus.PAID) {
+            throw ApiException.badRequest("This order is already marked as paid.");
+        }
+        if (order.getStatus() == OrderStatus.REJECTED || order.getStatus() == OrderStatus.CANCELLED) {
+            throw ApiException.badRequest("Payment cannot be marked for a "
+                    + order.getStatus().name().toLowerCase() + " order.");
+        }
+        order.setPaymentStatus(PaymentStatus.PAID);
+        Order saved = orderRepository.save(order);
+
+        // Let the customer know their payment was confirmed.
+        appNotificationService.notifyUser(order.getUser().getId(), "ORDER_STATUS",
+                "Payment received",
+                "We've confirmed your payment for order " + saved.getOrderNumber() + ".",
+                "/orders/" + saved.getId());
+
+        return OrderResponse.from(saved);
+    }
+
     /** P1-ADMIN-06: accept an order (PLACED -> ACCEPTED). */
     @Transactional
     public OrderResponse accept(Long orderId) {

@@ -54,4 +54,10 @@ public class AdminOrderController {
                                                 @Valid @RequestBody RejectOrderRequest req) {
         return ResponseEntity.ok(orderService.reject(id, req.reason()));
     }
+
+    /** Mark a pending payment (e.g. a UPI-QR order) as received. */
+    @PatchMapping("/{id}/mark-paid")
+    public ResponseEntity<OrderResponse> markPaid(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.markPaymentReceived(id));
+    }
 }

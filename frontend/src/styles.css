@@ -509,10 +509,14 @@ label {
 .nav-actions { display: inline-flex; align-items: center; gap: 8px; }
 
 /* Admin has many menu items — keep the links compact so the list, bell and
-   profile sit comfortably in one clean row on desktop. */
-.nav-admin .nav-links { gap: 4px; }
-.nav-admin .nav-links a { padding: 7px 11px; font-size: 0.83rem; }
-.nav-admin .nav-actions { margin-left: 12px; }
+   profile sit comfortably in one clean row on desktop. Scoped to desktop so
+   the mobile top bar (app name, list, notification, profile on one line)
+   stays identical to the customer view. */
+@media (min-width: 769px) {
+  .nav-admin .nav-links { gap: 4px; }
+  .nav-admin .nav-links a { padding: 7px 11px; font-size: 0.83rem; }
+  .nav-admin .nav-actions { margin-left: 12px; }
+}
 
 .cart-badge {
   background: var(--brand);

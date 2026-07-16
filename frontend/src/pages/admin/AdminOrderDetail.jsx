@@ -45,6 +45,7 @@ export default function AdminOrderDetail() {
 
   const accept = () => act(() => client.patch(`/api/admin/orders/${id}/accept`), 'Order accepted.')
   const setStatus = (status) => act(() => client.patch(`/api/admin/orders/${id}/status`, { status }), `Status updated to ${STATUS_LABELS[status]}.`)
+  const markPaid = () => act(() => client.patch(`/api/admin/orders/${id}/mark-paid`), 'Payment marked as received.')
   const reject = () => {
     if (!reason.trim()) { setError('Please enter a rejection reason.'); return }
     act(() => client.patch(`/api/admin/orders/${id}/reject`, { reason: reason.trim() }), 'Order rejected and stock restored.')
@@ -99,6 +100,20 @@ export default function AdminOrderDetail() {
         )}
         {order.status === 'REJECTED' && order.rejectReason && (
           <div className="alert error">Rejection reason: {order.rejectReason}</div>
+        )}
+
+        {/* UPI-QR orders are placed as PENDING — admin confirms payment here. */}
+        {order.paymentMode === 'UPI_QR' && order.paymentStatus === 'PENDING'
+          && !['REJECTED', 'CANCELLED'].includes(order.status) && (
+          <div className="mt">
+            <div className="alert info" style={{ marginBottom: 8 }}>
+              💳 UPI payment pending — check that ₹{Number(order.totalAmount).toFixed(2)} was received in your UPI app, then confirm.
+            </div>
+            <button onClick={markPaid} disabled={busy}>✓ Mark payment received</button>
+          </div>
+        )}
+        {order.paymentMode === 'UPI_QR' && order.paymentStatus === 'PAID' && (
+          <div className="alert success mt">✅ UPI payment confirmed.</div>
         )}
 
         {rejectMode && (
