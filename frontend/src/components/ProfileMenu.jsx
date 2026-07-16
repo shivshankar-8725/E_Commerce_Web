@@ -89,7 +89,7 @@ export default function ProfileMenu() {
     {confirm && (
       <ConfirmDialog
         title="Logout?"
-        message="Are you sure you want to log out of your E-Mart account?"
+        message="Are you sure you want to log out of your SoluSphere account?"
         confirmLabel="Logout"
         danger
         onConfirm={doLogout}

@@ -26,7 +26,7 @@ export default function Cart() {
         <div className="empty">
           <div className="big">🛒</div>
           <p>Your cart is empty.</p>
-          <Link to="/shop"><button>Browse snacks</button></Link>
+          <Link to="/shop"><button>Browse solutions</button></Link>
         </div>
       </div>
     )

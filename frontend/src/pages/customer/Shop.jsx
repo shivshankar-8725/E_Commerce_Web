@@ -39,10 +39,10 @@ export default function Shop() {
       {/* Welcome banner */}
       <div className="shop-hero">
         <div>
-          <h1 className="shop-hero-title">Products</h1>
-          <p className="shop-hero-sub">Browse our products and add your favourites to the cart.</p>
+          <h1 className="shop-hero-title">Solutions & Products</h1>
+          <p className="shop-hero-sub">Explore premier services and quality products across diverse sectors.</p>
         </div>
-        <div className="shop-hero-emoji">🛒</div>
+        <div className="shop-hero-emoji">🛍️</div>
       </div>
 
       {isDealer && (
@@ -55,7 +55,7 @@ export default function Shop() {
       <div className="card shop-toolbar">
         <input
           className="shop-search"
-          placeholder="🔍 Search snacks by name..."
+          placeholder="🔍 Search products & solutions by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -78,7 +78,7 @@ export default function Shop() {
         <p className="muted">Loading products...</p>
       ) : products.length === 0 ? (
         <div className="empty">
-          <div className="big">🛒</div>
+          <div className="big">🛍️</div>
           <p>No products found{search ? ` for "${search}"` : ''}. Try a different search or category.</p>
         </div>
       ) : (
@@ -90,7 +90,7 @@ export default function Shop() {
                 <Link to={`/product/${p.id}`} className="img">
                   {p.imageUrl
                     ? <img src={imgSrc(p.imageUrl)} alt={p.name} />
-                    : <span className="placeholder">🥨</span>}
+                    : <span className="placeholder">📦</span>}
                   {out && <span className="img-ribbon">Out of stock</span>}
                 </Link>
                 <div className="body">
