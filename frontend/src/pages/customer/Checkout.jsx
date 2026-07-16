@@ -300,7 +300,7 @@ export default function Checkout() {
               value={buildUpiUrl({ upiId, payeeName: upiPayeeName, amount: payable, note: 'SoluSphere order' })}
               size={190}
               level="M"
-              includeMargin
+              marginSize={2}
               bgColor="#ffffff"
               fgColor="#0a0f1c"
             />
