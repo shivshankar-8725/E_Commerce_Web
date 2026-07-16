@@ -25,7 +25,7 @@ export default function Navbar() {
   // Admin gets the admin navbar
   if (isAdmin) {
     return (
-      <nav className="nav">
+      <nav className="nav nav-admin">
         <div className="nav-inner">
           <Link to="/admin" className="brand" onClick={close}>🛍️ SoluSphere <span className="brand-tag">Admin</span></Link>
           <div className={`nav-links${open ? ' open' : ''}`}>

@@ -36,26 +36,37 @@ public class PaymentModeConstraintFix implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // Drop every CHECK constraint on the orders table. Hibernate only adds
+        // CHECK constraints there for the enum columns (status, payment_mode,
+        // payment_status); dropping them is safe because @Enumerated already
+        // guarantees only valid enum names are ever written. This is broader —
+        // and therefore more robust — than matching on the check clause text,
+        // whose format varies between MySQL versions.
+        List<String> names;
         try {
-            List<String> names = jdbc.queryForList(
-                    "SELECT cc.CONSTRAINT_NAME " +
-                    "FROM information_schema.CHECK_CONSTRAINTS cc " +
-                    "JOIN information_schema.TABLE_CONSTRAINTS tc " +
-                    "  ON cc.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA " +
-                    "  AND cc.CONSTRAINT_NAME = tc.CONSTRAINT_NAME " +
-                    "WHERE tc.CONSTRAINT_SCHEMA = DATABASE() " +
-                    "  AND tc.TABLE_NAME = 'orders' " +
-                    "  AND cc.CHECK_CLAUSE LIKE '%payment_mode%'",
+            names = jdbc.queryForList(
+                    "SELECT CONSTRAINT_NAME FROM information_schema.TABLE_CONSTRAINTS " +
+                    "WHERE CONSTRAINT_SCHEMA = DATABASE() " +
+                    "  AND TABLE_NAME = 'orders' " +
+                    "  AND CONSTRAINT_TYPE = 'CHECK'",
                     String.class);
-
-            for (String name : names) {
-                jdbc.execute("ALTER TABLE orders DROP CHECK `" + name + "`");
-                log.info("Dropped stale CHECK constraint '{}' on orders.payment_mode", name);
-            }
         } catch (Exception e) {
-            // Never block startup — the constraint may not exist or the DB may
-            // not support CHECK_CONSTRAINTS (older MySQL). Safe to ignore.
-            log.warn("Skipped orders.payment_mode CHECK-constraint cleanup: {}", e.getMessage());
+            // Older MySQL (< 8.0.16) has no CHECK_CONSTRAINTS support and does
+            // not enforce checks anyway — nothing to do.
+            log.warn("Could not read CHECK constraints on orders (safe to ignore): {}", e.getMessage());
+            return;
+        }
+
+        for (String name : names) {
+            try {
+                jdbc.execute("ALTER TABLE orders DROP CHECK `" + name + "`");
+                log.info("Dropped stale CHECK constraint '{}' on orders", name);
+            } catch (Exception e) {
+                // Most likely the DB user lacks ALTER privilege — surface it so
+                // it can be run manually, but never block startup.
+                log.error("FAILED to drop CHECK constraint '{}' on orders — run it manually "
+                        + "(ALTER TABLE orders DROP CHECK `{}`;). Cause: {}", name, name, e.getMessage());
+            }
         }
     }
 }

@@ -508,6 +508,12 @@ label {
 
 .nav-actions { display: inline-flex; align-items: center; gap: 8px; }
 
+/* Admin has many menu items — keep the links compact so the list, bell and
+   profile sit comfortably in one clean row on desktop. */
+.nav-admin .nav-links { gap: 4px; }
+.nav-admin .nav-links a { padding: 7px 11px; font-size: 0.83rem; }
+.nav-admin .nav-actions { margin-left: 12px; }
+
 .cart-badge {
   background: var(--brand);
   color: #fff;
@@ -1161,18 +1167,18 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
 .stat-grid {
   display: grid;
-  gap: 20px;
-  margin-bottom: 28px;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 .stat-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 22px;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   box-shadow: var(--card-shadow);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -1194,17 +1200,17 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .stat-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.14) !important; box-shadow: 0 20px 44px rgba(0,0,0,0.5); }
 .stat-card:hover::after { transform: scaleX(1); }
 .stat-icon {
-  width: 56px; height: 56px;
-  border-radius: 13px;
+  width: 44px; height: 44px;
+  border-radius: 11px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
   background: rgba(247,103,7,0.1);
   border: 1px solid rgba(247,103,7,0.18);
   color: var(--brand-light);
 }
-.stat-value { font-size: 1.9rem; font-weight: 800; line-height: 1.1; color: var(--text-bright); }
-.stat-label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; font-weight: 500; }
+.stat-value { font-size: 1.4rem; font-weight: 800; line-height: 1.1; color: var(--text-bright); }
+.stat-label { color: var(--muted); font-size: 0.82rem; margin-top: 3px; font-weight: 500; }
 
 .dash-cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 22px; align-items: start; }
 .dash-panel { padding: 22px; }
